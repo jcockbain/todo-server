@@ -1,65 +1,54 @@
 const repository = require('../repositories/task-repository');
 
-const getTasks = (req, res, next) => {
-  repository
-    .findAll()
-    .then((tasks) => {
-      res.json(tasks);
-    })
-    .catch((err) => {
-      next(err);
-    });
-};
-
-const getTask = (req, res, next) => {
-  const { id } = req.params;
-  repository
-    .findById(id)
-    .then((task) => {
-      res.json(task);
-    })
-    .catch((err) => {
-      next(err);
-    });
-};
-
-const postTask = (req, res) => {
-  const { description, date, completed } = req.body;
-  repository
-    .create(description, date, completed)
-    .then((task) => {
-      res.json(task);
-    })
-    .catch((error) => console.log(error));
-};
-
-const putTask = (req, res, next) => {
-  const { id } = req.params;
-  const task = {
-    description: req.body.description,
-    date: req.body.date,
-    completed: req.body.completed,
-  };
-  repository
-    .updateById(id, task)
-    .then(res.status(task))
-    .catch((err) => next(err));
-};
-
-const deleteTask = (req, res, next) => {
-  const { id } = req.params;
-  repository
-    .deleteById(id)
-    .then((ok) => {
-      console.log(`Deleted task with id: ${id}`);
-      res.sendStatus(200);
-    })
-    .catch((err) => next(err));
-};
-
-const resetTasks = (req, res, next) => {
+const getTasks = async (req, res, next) => {
   try {
-    req.tasks.resetTasks();
+    const tasks = await repository.findAll();
+    res.json(tasks);
+  } catch (err) {
+    next(err);
+  }
+};
+
+const getTask = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const task = await repository.findById(id);
+    res.json(task);
+  } catch (err) {
+    next(err);
+  }
+};
+
+const postTask = async (req, res, next) => {
+  try {
+    const { description, date, completed } = req.body;
+    const task = await repository.create(description, date, completed);
+    res.json(task);
+  } catch (err) {
+    next(err);
+  }
+};
+
+const putTask = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const task = {
+      description: req.body.description,
+      date: req.body.date,
+      completed: req.body.completed,
+    };
+    await repository
+      .updateById(id, task);
+    res.status(task);
+  } catch (err) {
+    next(err);
+  }
+};
+
+const deleteTask = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    await repository.deleteById(id);
     res.sendStatus(200);
   } catch (err) {
     next(err);
@@ -72,5 +61,4 @@ module.exports = {
   postTask,
   putTask,
   deleteTask,
-  resetTasks,
 };

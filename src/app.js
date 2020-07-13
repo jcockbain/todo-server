@@ -8,7 +8,7 @@ const cors = require('cors');
 const routes = require('./routes');
 const { connectDb } = require('./models');
 
-const port = process.env.SERVER_PORT || 3000;
+const port = process.env.SERVER_PORT || 4000;
 
 const middleware = require('./middleware');
 

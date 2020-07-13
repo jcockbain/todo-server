@@ -15,6 +15,4 @@ router
   .put(tasksController.putTask)
   .delete(tasksController.deleteTask);
 
-router.route('/reset').post(tasksController.resetTasks);
-
 module.exports = router;
