@@ -8,7 +8,7 @@ const cors = require('cors');
 const routes = require('./routes');
 const { connectDb } = require('./models');
 
-const port = process.env.SERVER_PORT || 4000;
+const port = process.env.SERVER_PORT || 3000;
 
 const middleware = require('./middleware');
 
@@ -21,8 +21,11 @@ app.use('/api/v1/', routes);
 
 app.use(middleware.errorHandler.handleErrors);
 
-connectDb().then(() => {
-  app.listen(port, () => console.log(`Example app listening on port ${port}!`));
-});
+// if condition for testing
+if (!module.parent) {
+  connectDb().then(() => {
+    app.listen(port, () => console.log(`Server listening on port ${port}!`));
+  });
+}
 
 module.exports = app;

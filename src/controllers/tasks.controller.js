@@ -37,9 +37,8 @@ const putTask = async (req, res, next) => {
       date: req.body.date,
       completed: req.body.completed,
     };
-    await repository
-      .updateById(id, task);
-    res.status(task);
+    await repository.updateById(id, task);
+    res.json(task);
   } catch (err) {
     next(err);
   }
@@ -55,10 +54,21 @@ const deleteTask = async (req, res, next) => {
   }
 };
 
+const resetTasks = async (req, res, next) => {
+  try {
+    await repository.reset();
+    res.sendStatus(200);
+  } catch (err) {
+    next(err);
+  }
+};
+
+
 module.exports = {
   getTasks,
   getTask,
   postTask,
   putTask,
   deleteTask,
+  resetTasks,
 };

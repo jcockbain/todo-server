@@ -24,6 +24,10 @@ class TaskRepository {
     return this.model.findByIdAndDelete(id);
   }
 
+  reset() {
+    return this.model.deleteMany({});
+  }
+
   updateById(id, object) {
     const query = { _id: id };
     return this.model.findOneAndUpdate(query, {
