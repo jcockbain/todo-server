@@ -6,8 +6,9 @@
   "scripts": {
     "start": "node src/app",
     "start:dev": "nodemon src/app",
-    "test": "mocha 'test/**/*test.js' --exit",
-    "test:dev": "nodemon --exec 'mocha -R min'"
+    "test": "nyc mocha 'test/**/*test.js' --exit",
+    "test:dev": "nodemon --exec 'mocha -R min'",
+    "coverage": "codecov"
   },
   "author": "jcockbain96@gmail.com",
   "license": "MIT",
@@ -17,11 +18,13 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "mongodb": "^3.5.9",
-    "mongoose": "^5.7.10"
+    "mongoose": "^5.7.10",
+    "nyc": "^15.1.0"
   },
   "devDependencies": {
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
+    "codecov": "^3.7.0",
     "eslint": "^5.16.0",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-plugin-import": "^2.18.2",

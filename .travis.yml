@@ -1,0 +1,9 @@
+language: node_js
+node_js:
+  - 'stable'
+install:
+  - npm i
+services:
+  - mongodb
+script:
+  - npm start & npx nyc --reporter=lcov npm test && npx codecov

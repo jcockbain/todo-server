@@ -6,6 +6,9 @@
   <a href="#" target="_blank">
     <img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg" />
   </a>
+  <a href="https://codecov.io/gh/jcockbain/todo-server">
+    <img src="https://codecov.io/gh/jcockbain/todo-server/branch/master/graph/badge.svg" />
+  </a>
 </p>
 
 > Server for managing todo tasks
