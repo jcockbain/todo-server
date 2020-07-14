@@ -2,8 +2,10 @@ require('dotenv').config();
 
 const express = require('express');
 const bodyParser = require('body-parser');
-
+const swaggerUI = require('swagger-ui-express');
 const cors = require('cors');
+const swaggerDocument = require('../swagger');
+
 
 const routes = require('./routes');
 const { connectDb } = require('./models');
@@ -20,6 +22,8 @@ app.use(bodyParser.json());
 app.use('/api/v1/', routes);
 
 app.use(middleware.errorHandler.handleErrors);
+
+app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 
 // if condition for testing
 if (!module.parent) {

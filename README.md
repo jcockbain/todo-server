@@ -28,6 +28,10 @@ npm run start
 npm run test
 ```
 
+## API docs
+
+With the sever running, the API docs will be found at `http://localhost:3000/api-docs/#/`.
+
 ## Author
 
 👤 **James Cockbain**

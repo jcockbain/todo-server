@@ -6,8 +6,8 @@ const router = express.Router();
 
 router
   .route('/')
-  .get(tasksController.getTasks)
-  .post(tasksController.postTask);
+  .post(tasksController.postTask)
+  .get(tasksController.getTasks);
 
 router
   .route('/:id')
