@@ -1,8 +1,5 @@
 <h1 align="center">Welcome to todo-server 👋</h1>
 <p>
-  <a href="https://www.npmjs.com/package/todo-server" target="_blank">
-    <img alt="Version" src="https://img.shields.io/npm/v/todo-server.svg">
-  </a>
   <a href="#" target="_blank">
     <img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg" />
   </a>
@@ -11,7 +8,7 @@
   </a>
 </p>
 
-> Server for managing todo tasks
+> Basic server for managing TODO tasks, using Express.js and MongoDb.
 
 ## Install
 

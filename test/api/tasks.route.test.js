@@ -2,6 +2,11 @@
 // const chaiHTTP = require('chai-http');
 const server = require('../setup/server.setup');
 const { expect } = require('../setup/chai.setup');
+const mongoId = require('mongoose').Types.ObjectId();
+
+const {
+  resetTasks, addTask, getTasks, getTask, updateTask, deleteTask, addTaskAndGetId,
+} = require('../modules/task.service');
 
 const task1 = {
   description: 'Complete Homework',
@@ -12,20 +17,6 @@ const taskUpdate = {
   description: 'cook pasta',
 };
 
-async function resetTasks() {
-  const res = await server().post('/api/v1/tasks/reset');
-  expect(res.status).to.equal(200);
-}
-
-async function addTask(task) {
-  const res = await server()
-    .post('/api/v1/tasks/')
-    .send(task);
-  expect(res.status).to.equal(200);
-  expect(res.body).to.include(task);
-  return res.body._id;
-}
-
 describe('/api/v1/tasks', () => {
   afterEach('delete all tasks', async () => {
     await resetTasks();
@@ -33,15 +24,16 @@ describe('/api/v1/tasks', () => {
 
   describe('POST /tasks', () => {
     it('returns 200 adding the task', async () => {
-      await addTask(task1);
+      const res = await addTask(task1);
+      expect(res.status).to.equal(200);
+      expect(res.body).to.include(task1);
     });
   });
 
   describe('GET /tasks', () => {
     it('returns 200, and the added task', async () => {
       await addTask(task1);
-      const res = await server()
-        .get('/api/v1/tasks');
+      const res = await getTasks();
       expect(res.status).to.equal(200);
       const taskExists = res.body.some((task) => task.description === task1.description);
       expect(taskExists).to.be.true;
@@ -50,46 +42,59 @@ describe('/api/v1/tasks', () => {
 
   describe('GET /tasks/:id', () => {
     it('returns 200 and correct task', async () => {
-      const id = await addTask(task1);
-      const res = await server()
-        .get(`/api/v1/tasks/${id}`);
+      const id = await addTaskAndGetId(task1);
+      const res = await getTask(id);
       expect(res.status).to.equal(200);
       expect(res.body).to.include(task1);
+    });
+
+    it('returns 500 for invalid id', async () => {
+      const res = await getTask('id');
+      expect(res.status).to.equal(500);
     });
   });
 
   describe('PUT /tasks/id:', () => {
     let id;
+
     it('returns 200 and updates a task', async () => {
-      id = await addTask(task1);
-      let res = await server()
-        .put(`/api/v1/tasks/${id}`)
-        .send(taskUpdate);
+      id = await addTaskAndGetId(task1);
+      let res = await updateTask(id, taskUpdate);
       expect(res.status).to.equal(200);
 
-      res = await server()
-        .get(`/api/v1/tasks/${id}`);
-      expect(res.status).to.equal(200);
+      res = await getTask(id);
       expect(res.body).to.include(taskUpdate);
     });
-    it('has updated the tasks list correctly', async () => {
-
+    it('returns 500 for invalid id', async () => {
+      const res = await updateTask('id');
+      expect(res.status).to.equal(500);
     });
   });
 
   describe('DELETE /tasks/id', () => {
     let id;
-    it('returns 200', async () => {
-      id = await addTask(task1);
-      const res = await server().delete(`/api/v1/tasks/${id}`);
+    it("returns 404 when task doesn't exist", async () => {
+      const res = await deleteTask(mongoId);
+      expect(res.status).to.equal(404);
+    });
+    it('returns 200 when deleting existing task', async () => {
+      id = await addTaskAndGetId(task1);
+      const res = await deleteTask(id);
       expect(res.status).to.equal(200);
     });
     it('has removed the correct element from the taskList', async () => {
-      const res = await server()
-        .get('/api/v1/tasks');
+      const res = await getTasks(mongoId);
       expect(res.status).to.equal(200);
-      const taskExists = res.body.some((task) => task.description === taskUpdate.description);
+      const taskExists = res.body.some((task) => task.description === task1.description);
       expect(taskExists).to.be.false;
+    });
+    it('returns 404 for the deleted task', async () => {
+      const res = await getTask(id);
+      expect(res.status).to.equal(404);
+    });
+    it('returns 500 for invalid id', async () => {
+      const res = await deleteTask('id');
+      expect(res.status).to.equal(500);
     });
   });
 });
