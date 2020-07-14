@@ -13,7 +13,11 @@ const getTask = async (req, res, next) => {
   try {
     const { id } = req.params;
     const task = await repository.findById(id);
-    res.json(task);
+    if (!task) {
+      res.sendStatus(404);
+    } else {
+      res.json(task);
+    }
   } catch (err) {
     next(err);
   }
@@ -47,8 +51,12 @@ const putTask = async (req, res, next) => {
 const deleteTask = async (req, res, next) => {
   try {
     const { id } = req.params;
-    await repository.deleteById(id);
-    res.sendStatus(200);
+    const deletedTask = await repository.deleteById(id);
+    if (!deletedTask) {
+      res.sendStatus(404);
+    } else {
+      res.json(deletedTask);
+    }
   } catch (err) {
     next(err);
   }
