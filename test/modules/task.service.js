@@ -32,6 +32,12 @@ async function getTasks() {
   return res;
 }
 
+async function getTasksByDate(startDate, endDate) {
+  const res = await server()
+    .get(`/api/v1/tasks/?start_date=${startDate}&end_date=${endDate}`);
+  return res;
+}
+
 async function getTask(id) {
   const res = await server()
     .get(`/api/v1/tasks/${id}`);
@@ -51,6 +57,7 @@ module.exports = {
   addTaskAndGetId,
   getTask,
   getTasks,
+  getTasksByDate,
   updateTask,
   deleteTask,
 };

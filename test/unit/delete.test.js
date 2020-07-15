@@ -2,7 +2,6 @@
 const assert = require('assert');
 const Task = require('../../src/models/task');
 
-
 describe('Deleting a task', () => {
   let task;
 

@@ -15,10 +15,59 @@ const swaggerDocument = {
     },
   },
   paths: {
+    '/task': {
+      post: {
+        description: 'Adds a specific task',
+        tags: ['tasks'],
+        requestBody: {
+          description: 'JSON containing task information',
+          content: {
+            'application/json': {
+              schema: {
+                $ref: '#/components/schemas/taskRequest',
+              },
+            },
+          },
+        },
+        responses: {
+          200: {
+            description: 'Success',
+            tags: ['tasks'],
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/taskResponse',
+                },
+              },
+            },
+          },
+          500: {
+            description: 'Internal Server Error',
+          },
+        },
+      },
+    },
     '/tasks': {
       get: {
         tags: ['tasks'],
-        description: 'Returns all tasks',
+        description: 'Returns tasks',
+        parameters: [
+          {
+            name: 'start_time',
+            description: 'The earliest time to receive tasks from, in ISO format YYYY-MM-DDTHH:MM:SSZ',
+            in: 'query',
+            type: 'string',
+            format: 'date',
+            pattern: 'YYYY-MM-DDTHH:MM:SSZ',
+          },
+          {
+            name: 'end_time',
+            description: 'The earliest time to receive tasks from, in ISO format YYYY-MM-DDTHH:MM:SSZ',
+            in: 'query',
+            type: 'string',
+            format: 'date',
+          },
+        ],
         responses: {
           200: {
             description: 'A list of tasks',
@@ -27,7 +76,7 @@ const swaggerDocument = {
                 schema: {
                   type: 'array',
                   items: {
-                    $ref: '#/components/schemas/task',
+                    $ref: '#/components/schemas/taskResponse',
                   },
                 },
               },
@@ -72,42 +121,13 @@ const swaggerDocument = {
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/task',
+                  $ref: '#/components/schemas/taskResponse',
                 },
               },
             },
           },
           404: {
             description: 'Task not found',
-          },
-          500: {
-            description: 'Internal Server Error',
-          },
-        },
-      },
-      post: {
-        description: 'Adds a specific task',
-        tags: ['tasks'],
-        parameters: [
-          {
-            name: 'id',
-            description: 'Task id',
-            in: 'path',
-            required: 'true',
-            type: 'string',
-          },
-        ],
-        responses: {
-          200: {
-            description: 'Success',
-            tags: ['tasks'],
-            content: {
-              'application/json': {
-                schema: {
-                  $ref: '#/components/schemas/task',
-                },
-              },
-            },
           },
           500: {
             description: 'Internal Server Error',
@@ -156,26 +176,53 @@ const swaggerDocument = {
   },
   components: {
     schemas: {
-      task: {
+      taskRequest: {
+        type: 'object',
+        properties: {
+          description: {
+            $ref: '#/components/schemas/description',
+          },
+          time: {
+            $ref: '#/components/schemas/time',
+          },
+          completed: {
+            $ref: '#/components/schemas/completed',
+          },
+        },
+      },
+      taskResponse: {
         type: 'object',
         properties: {
           _id: {
-            type: 'integer',
-            description: 'Database id of the task',
+            $ref: '#/components/schemas/_id',
           },
           description: {
-            type: 'string',
-            description: 'Description of the task',
+            $ref: '#/components/schemas/description',
           },
-          date: {
-            type: 'date',
-            description: 'Day of the task',
+          time: {
+            $ref: '#/components/schemas/time',
           },
           completed: {
-            type: 'boolean',
-            description: 'Has the task been completed?',
+            $ref: '#/components/schemas/completed',
           },
         },
+      },
+      _id: {
+        type: 'integer',
+        description: 'Database id of the task',
+      },
+      description: {
+        type: 'string',
+        description: 'Description of the task',
+      },
+      time: {
+        type: 'string',
+        format: 'date-time',
+        description: 'Time of the task, in ISO format YYYY-MM-DDTHH:MM:SSZ',
+      },
+      completed: {
+        type: 'boolean',
+        description: 'Has the task been completed?',
       },
     },
   },

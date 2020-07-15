@@ -1,3 +1,4 @@
+const { endOfDay, startOfDay } = require('date-fns');
 const task = require('../models/task');
 
 class TaskRepository {
@@ -26,6 +27,12 @@ class TaskRepository {
 
   reset() {
     return this.model.deleteMany({});
+  }
+
+  getByDateRange(start, end) {
+    const startDate = Date.parse(start);
+    const endDate = Date.parse(end);
+    return this.model.find({ date: { $gte: startOfDay(startDate), $lt: endOfDay(endDate) } });
   }
 
   updateById(id, object) {
