@@ -1,8 +1,12 @@
 const repository = require('../repositories/task-repository');
 
+
 const getTasks = async (req, res, next) => {
   try {
-    const tasks = await repository.findAll();
+    const { start_date, end_date } = req.query;
+    const tasks = (start_date && end_date)
+      ? await repository.getByDateRange(start_date, end_date)
+      : await repository.findAll();
     res.json(tasks);
   } catch (err) {
     next(err);

@@ -1,17 +1,27 @@
 // const chai = require('chai');
 // const chaiHTTP = require('chai-http');
-const server = require('../setup/server.setup');
-const { expect } = require('../setup/chai.setup');
 const mongoId = require('mongoose').Types.ObjectId();
+const { expect } = require('../setup/chai.setup');
 
 const {
-  resetTasks, addTask, getTasks, getTask, updateTask, deleteTask, addTaskAndGetId,
+  resetTasks,
+  addTask,
+  getTasks,
+  getTask,
+  updateTask,
+  deleteTask,
+  addTaskAndGetId,
+  getTasksByDate,
 } = require('../modules/task.service');
 
 const task1 = {
   description: 'Complete Homework',
   completed: false,
+  date: new Date(2020, 6, 23).toISOString(),
 };
+
+// date is stored in UTC format
+const { date, ...storedTask1 } = task1;
 
 const taskUpdate = {
   description: 'cook pasta',
@@ -26,17 +36,34 @@ describe('/api/v1/tasks', () => {
     it('returns 200 adding the task', async () => {
       const res = await addTask(task1);
       expect(res.status).to.equal(200);
-      expect(res.body).to.include(task1);
+      expect(res.body).to.include(storedTask1);
     });
   });
-
   describe('GET /tasks', () => {
     it('returns 200, and the added task', async () => {
       await addTask(task1);
       const res = await getTasks();
       expect(res.status).to.equal(200);
       const taskExists = res.body.some((task) => task.description === task1.description);
-      expect(taskExists).to.be.true;
+      expect(taskExists).to.equal(true);
+    });
+  });
+
+  describe('GET /tasks?{start_date}&{end_date}', () => {
+    it('returns 200, and the added task, for correct time range', async () => {
+      await addTask(task1);
+      const res = await getTasksByDate(task1.date, task1.date);
+      expect(res.status).to.equal(200);
+      const taskExists = res.body.some((task) => task.description === task1.description);
+      expect(taskExists).to.equal(true);
+    });
+
+    it('returns 200, but not tasks, for different time range', async () => {
+      await addTask(task1);
+      const testDate = new Date(2020, 6, 24).toISOString();
+      const res = await getTasksByDate(testDate, testDate);
+      expect(res.status).to.equal(200);
+      expect(res.body.length).to.equal(0);
     });
   });
 
@@ -45,7 +72,7 @@ describe('/api/v1/tasks', () => {
       const id = await addTaskAndGetId(task1);
       const res = await getTask(id);
       expect(res.status).to.equal(200);
-      expect(res.body).to.include(task1);
+      expect(res.body).to.include(storedTask1);
     });
 
     it('returns 500 for invalid id', async () => {
@@ -86,7 +113,7 @@ describe('/api/v1/tasks', () => {
       const res = await getTasks(mongoId);
       expect(res.status).to.equal(200);
       const taskExists = res.body.some((task) => task.description === task1.description);
-      expect(taskExists).to.be.false;
+      expect(taskExists).to.equal(false);
     });
     it('returns 404 for the deleted task', async () => {
       const res = await getTask(id);
