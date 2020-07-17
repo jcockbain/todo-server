@@ -1,10 +1,9 @@
 const repository = require('../repositories/task-repository');
 
-
 const getTasks = async (req, res, next) => {
   try {
     const { start_date, end_date } = req.query;
-    const tasks = (start_date && end_date)
+    const tasks = start_date && end_date
       ? await repository.getByDateRange(start_date, end_date)
       : await repository.findAll();
     res.json(tasks);
@@ -29,8 +28,10 @@ const getTask = async (req, res, next) => {
 
 const postTask = async (req, res, next) => {
   try {
-    const { description, date, completed } = req.body;
-    const task = await repository.create(description, date, completed);
+    const {
+      title, start, end, completed,
+    } = req.body;
+    const task = await repository.create(title, start, end, completed);
     res.json(task);
   } catch (err) {
     next(err);
@@ -40,10 +41,14 @@ const postTask = async (req, res, next) => {
 const putTask = async (req, res, next) => {
   try {
     const { id } = req.params;
+    const {
+      title, start, completed, end,
+    } = req.body;
     const task = {
-      description: req.body.description,
-      date: req.body.date,
-      completed: req.body.completed,
+      title,
+      start,
+      end,
+      completed,
     };
     await repository.updateById(id, task);
     res.json(task);
@@ -74,7 +79,6 @@ const resetTasks = async (req, res, next) => {
     next(err);
   }
 };
-
 
 module.exports = {
   getTasks,

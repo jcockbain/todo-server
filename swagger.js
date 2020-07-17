@@ -179,11 +179,14 @@ const swaggerDocument = {
       taskRequest: {
         type: 'object',
         properties: {
-          description: {
-            $ref: '#/components/schemas/description',
+          title: {
+            $ref: '#/components/schemas/title',
           },
-          time: {
-            $ref: '#/components/schemas/time',
+          start: {
+            $ref: '#/components/schemas/start',
+          },
+          end: {
+            $ref: '#/components/schemas/end',
           },
           completed: {
             $ref: '#/components/schemas/completed',
@@ -196,11 +199,14 @@ const swaggerDocument = {
           _id: {
             $ref: '#/components/schemas/_id',
           },
-          description: {
-            $ref: '#/components/schemas/description',
+          title: {
+            $ref: '#/components/schemas/title',
           },
-          time: {
-            $ref: '#/components/schemas/time',
+          start: {
+            $ref: '#/components/schemas/start',
+          },
+          end: {
+            $ref: '#/components/schemas/end',
           },
           completed: {
             $ref: '#/components/schemas/completed',
@@ -215,10 +221,15 @@ const swaggerDocument = {
         type: 'string',
         description: 'Description of the task',
       },
-      time: {
+      start: {
         type: 'string',
         format: 'date-time',
-        description: 'Time of the task, in ISO format YYYY-MM-DDTHH:MM:SSZ',
+        description: 'Start time of the task, in ISO format YYYY-MM-DDTHH:MM:SSZ',
+      },
+      end: {
+        type: 'string',
+        format: 'date-time',
+        description: 'End time of the task, in ISO format YYYY-MM-DDTHH:MM:SSZ',
       },
       completed: {
         type: 'boolean',

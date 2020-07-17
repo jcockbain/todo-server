@@ -7,19 +7,19 @@ describe('Updating task details', () => {
   let task;
 
   beforeEach(async () => {
-    task = new Task({ description: 'Read' });
+    task = new Task({ title: 'Read' });
     await task.save();
   });
 
   it('updates task using its instance', async () => {
-    await task.updateOne({ description: 'Run' });
-    const foundTask = await Task.findOne({ description: 'Run' });
+    await task.updateOne({ title: 'Run' });
+    const foundTask = await Task.findOne({ title: 'Run' });
     assert(foundTask != null);
   });
 
-  it('updates task using a description', async () => {
-    await Task.findOneAndUpdate({ description: 'Walk' });
-    const foundTask = await Task.findOne({ description: 'Walk' });
+  it('updates task using a title', async () => {
+    await Task.findOneAndUpdate({ title: 'Walk' });
+    const foundTask = await Task.findOne({ title: 'Walk' });
     assert(foundTask != null);
   });
 });

@@ -7,8 +7,10 @@ class TaskRepository {
   }
 
   // create a new task
-  create(description, date, completed) {
-    const newTask = { description, date, completed };
+  create(title, start, end, completed) {
+    const newTask = {
+      title, start, end, completed,
+    };
     const taskToSave = new this.model(newTask);
     return taskToSave.save();
   }
@@ -32,15 +34,16 @@ class TaskRepository {
   getByDateRange(start, end) {
     const startDate = Date.parse(start);
     const endDate = Date.parse(end);
-    return this.model.find({ date: { $gte: startOfDay(startDate), $lt: endOfDay(endDate) } });
+    return this.model.find({ start: { $gte: startOfDay(startDate) }, end: { $lt: endOfDay(endDate) } });
   }
 
   updateById(id, object) {
     const query = { _id: id };
     return this.model.findOneAndUpdate(query, {
       $set: {
-        description: object.description,
-        date: object.date,
+        title: object.title,
+        start: object.start,
+        end: object.end,
         completed: object.completed,
       },
     });

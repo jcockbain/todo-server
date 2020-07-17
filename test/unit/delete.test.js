@@ -6,25 +6,25 @@ describe('Deleting a task', () => {
   let task;
 
   beforeEach(async () => {
-    task = new Task({ description: 'Read' });
+    task = new Task({ title: 'Read' });
     await task.save();
   });
 
   it('removes a task using its instance', async () => {
     await task.remove();
-    const foundTask = await Task.findOne({ description: 'Read' });
+    const foundTask = await Task.findOne({ title: 'Read' });
     assert(foundTask == null);
   });
 
-  it('removes a task using its description', async () => {
-    await Task.findOneAndRemove({ description: 'Read' });
-    const foundTask = await Task.findOne({ description: 'Read' });
+  it('removes a task using its title', async () => {
+    await Task.findOneAndRemove({ title: 'Read' });
+    const foundTask = await Task.findOne({ title: 'Read' });
     assert(foundTask == null);
   });
 
   it('removes a task using its ID', async () => {
     await Task.findByIdAndRemove(task._id);
-    const foundTask = await Task.findOne({ description: 'Read' });
+    const foundTask = await Task.findOne({ title: 'Read' });
     assert(foundTask == null);
   });
 });

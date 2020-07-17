@@ -14,17 +14,19 @@ const {
   getTasksByDate,
 } = require('../modules/task.service');
 
+
 const task1 = {
-  description: 'Complete Homework',
+  title: 'Complete Homework',
+  start: new Date(2020, 6, 23).toISOString(),
+  end: new Date(2020, 6, 23).toISOString(),
   completed: false,
-  date: new Date(2020, 6, 23).toISOString(),
 };
 
 // date is stored in UTC format
 const { date, ...storedTask1 } = task1;
 
 const taskUpdate = {
-  description: 'cook pasta',
+  title: 'cook pasta',
 };
 
 describe('/api/v1/tasks', () => {
@@ -44,7 +46,7 @@ describe('/api/v1/tasks', () => {
       await addTask(task1);
       const res = await getTasks();
       expect(res.status).to.equal(200);
-      const taskExists = res.body.some((task) => task.description === task1.description);
+      const taskExists = res.body.some((task) => task.title === task1.title);
       expect(taskExists).to.equal(true);
     });
   });
@@ -52,9 +54,9 @@ describe('/api/v1/tasks', () => {
   describe('GET /tasks?{start_date}&{end_date}', () => {
     it('returns 200, and the added task, for correct time range', async () => {
       await addTask(task1);
-      const res = await getTasksByDate(task1.date, task1.date);
+      const res = await getTasksByDate(task1.start, task1.end);
       expect(res.status).to.equal(200);
-      const taskExists = res.body.some((task) => task.description === task1.description);
+      const taskExists = res.body.some((task) => task.title === task1.title);
       expect(taskExists).to.equal(true);
     });
 
@@ -112,7 +114,7 @@ describe('/api/v1/tasks', () => {
     it('has removed the correct element from the taskList', async () => {
       const res = await getTasks(mongoId);
       expect(res.status).to.equal(200);
-      const taskExists = res.body.some((task) => task.description === task1.description);
+      const taskExists = res.body.some((task) => task.title === task1.title);
       expect(taskExists).to.equal(false);
     });
     it('returns 404 for the deleted task', async () => {
