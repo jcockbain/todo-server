@@ -4,10 +4,13 @@ const { Schema } = mongoose;
 
 // Define schema for todo items
 const taskSchema = new Schema({
-  description: {
+  title: {
     type: String,
   },
-  date: {
+  start: {
+    type: Date,
+  },
+  end: {
     type: Date,
   },
   completed: {

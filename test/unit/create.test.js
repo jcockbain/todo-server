@@ -4,7 +4,7 @@ const Task = require('../../src/models/task');
 // imports the Pokemon model.
 describe('Creating Tasks', () => {
   it('creates a task', async () => {
-    const task = new Task({ description: 'Walk dog', completed: true });
+    const task = new Task({ title: 'Walk dog', completed: true });
     await task.save(); // takes some time and returns a promise
     assert(!task.isNew); // if poke is saved to db it is not new
   });
